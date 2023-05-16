@@ -7,7 +7,9 @@ import { engine } from "express-handlebars"
 import views from "./routes/views.routes.js"
 import  mongoose from "mongoose"
 import {Server} from "socket.io"
+import chatManager from "./api/dao/chatManager.js"
 
+const cManager=new chatManager()
 const PORT=parseInt(process.env.PORT)
 const server = express()
 const MONGOOSEURL=process.env.MONGOOSEURL
@@ -24,8 +26,8 @@ io.on('connection',socket=>{
     console.log("Nuevo Cliente Conectado")
     socket.on('message',data=>{
         messages.push(data)
+        cManager.addMessages(data)
 
-        
         io.emit('messageLogs',messages)
     })
 })
