@@ -32,4 +32,11 @@ router.delete(`/carts/:cid/products/:pid`,async(req,res)=>{
     res.status(200).send({status:"OK",data:process})
 })
 
+router.put(`/carts/:cid`,async(req,res)=>{
+    let cid=req.params.cid
+    let prodArray=req.body
+    const process=await cManager.addListProductCart(cid,prodArray)
+    res.status(200).send({status:"OK",data:process})
+})
+
 export default router

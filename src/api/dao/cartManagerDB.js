@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import cartModel from "./models/cart.model.js"
+import productModel from "./models/product.model.js"
 
 class CartManager {
     constructor() {
@@ -50,31 +51,48 @@ class CartManager {
                 }
                 return "Producto Agregado Correctamente"
             }
-        }catch(e){
+        } catch (e) {
             console.log("Update Product error de formato de codigo")
             return "Formato de codigo erroneo"
         }
     }
-    deleteCartProduct=async(cid,pid)=>{
-        try{
-            let fil={$pull:{"products":{pid:pid}}}
-             const arreglo = await cartModel.updateOne({"_id":new mongoose.Types.ObjectId(cid)},fil)
-             
-             if(arreglo.matchedCount==0){
+    deleteCartProduct = async (cid, pid) => {
+        try {
+            let fil = { $pull: { "products": { pid: pid } } }
+            const arreglo = await cartModel.updateOne({ "_id": new mongoose.Types.ObjectId(cid) }, fil)
+
+            if (arreglo.matchedCount == 0) {
                 return "El ID del carrito no existe"
-             }else if(arreglo.modifiedCount==0){
+            } else if (arreglo.modifiedCount == 0) {
                 return "El id del Producto indicado no esta en este carrito"
-             }else{
+            } else {
                 return "Producto eliminado exitosamente"
-             }
+            }
 
-        }catch(e){
+        } catch (e) {
             console.log("Update Product error de formato de codigo")
             return "Formato de codigo erroneo"
         }
     }
 
+    addListProductCart = async (cid, prodArray) => {
+         try {
+            let result=prodArray.products.map((e)=>e.pid)
+            let test=await productModel.find({ "_id": {$in:result} })
+           if(result.length!=test.length){
+            return "Uno o mas Productos que intenta agregar no son validos"
+           }else{
+            
+            let fil = { $push: { products: prodArray.products } }
+            const arreglo = await cartModel.updateOne({ "_id": new mongoose.Types.ObjectId(cid) }, fil)
+            return arreglo
+        }
+         } catch (e) {
+             console.log("Update Product error de formato de codigo")
+             return "Formato de codigo erroneo"
+         }
     }
+}
 
 
 
