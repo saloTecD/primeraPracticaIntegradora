@@ -19,7 +19,12 @@ class ProductManager {
     }
 
     getProductsLimit = async (n) => {
-        const arreglo = await productModel.find().limit(n)
+        let q
+        let op
+        q=n.category?{category:n.category}:n.status?{status:n.status}:{}
+        op=n.sort===false?{limit:n.limit,page:n.page}:{limit:n.limit,page:n.page,sort:{price:n.sort}}
+        
+        const arreglo = await productModel.paginate(q,op)
         return arreglo
     }
 

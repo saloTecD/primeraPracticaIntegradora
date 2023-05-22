@@ -55,7 +55,24 @@ class CartManager {
             return "Formato de codigo erroneo"
         }
     }
- 
+    deleteCartProduct=async(cid,pid)=>{
+        try{
+            let fil={$pull:{"products":{pid:pid}}}
+             const arreglo = await cartModel.updateOne({"_id":new mongoose.Types.ObjectId(cid)},fil)
+             
+             if(arreglo.matchedCount==0){
+                return "El ID del carrito no existe"
+             }else if(arreglo.modifiedCount==0){
+                return "El id del Producto indicado no esta en este carrito"
+             }else{
+                return "Producto eliminado exitosamente"
+             }
+
+        }catch(e){
+            console.log("Update Product error de formato de codigo")
+            return "Formato de codigo erroneo"
+        }
+    }
 
     }
 

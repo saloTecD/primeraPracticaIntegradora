@@ -25,4 +25,11 @@ router.post(`/carts/:cid/product/:pid`,async(req,res)=>{
     }
 })
 
+router.delete(`/carts/:cid/products/:pid`,async(req,res)=>{
+    let cid=req.params.cid
+    let pid=req.params.pid
+    const process=await cManager.deleteCartProduct(cid,pid)
+    res.status(200).send({status:"OK",data:process})
+})
+
 export default router
