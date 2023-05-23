@@ -39,4 +39,17 @@ router.put(`/carts/:cid`,async(req,res)=>{
     res.status(200).send({status:"OK",data:process})
 })
 
+router.put(`/carts/:cid/products/:pid`,async(req,res)=>{
+    let cid=req.params.cid
+    let pid=req.params.pid
+    let quant=req.body.quantity
+    const process=await cManager.addQuantProdCart(cid,pid,quant)
+    res.status(200).send({status:"OK",data:process})
+})
+
+router.delete(`/carts/:cid`,async(req,res)=>{
+    let cid=req.params.cid
+    const process=await cManager.emptyCart(cid)
+    res.status(200).send({status:"OK",data:process})
+})
 export default router
