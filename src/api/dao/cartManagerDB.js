@@ -26,39 +26,44 @@ class CartManager {
         }
     }
     addCartProduct = async (cid, pid) => {
-        try {
+        // try {
             const arreglo = await cartModel.findById(cid)
+            
             if (arreglo === null) {
                 return "El ID del carrito que busca no existe"
             } else {
-
-                const existe = await cartModel.find({ "_id": cid, "products.pid": pid })
-
+                
+                const existe = await cartModel.find({ "_id": cid, "products.pid": new mongoose.Types.ObjectId(pid) })
+                
 
                 if (existe == "") {
+                    
                     await cartModel.updateOne(
                         { "_id": new mongoose.Types.ObjectId(cid) },
-                        { $push: { products: { pid: pid, quantity: 1 } } }
+                        { $push: { products: { pid: new mongoose.Types.ObjectId(pid), quantity: 1 } } }
                     )
-
+                    
                 } else {
+                    
                     const found = existe[0].products.findIndex(e => JSON.stringify(e.pid) == JSON.stringify(pid))
+
+                    
                     let cantidad = existe[0].products[found].quantity
 
                     cantidad++
 
-                    await cartModel.updateOne({ "_id": new mongoose.Types.ObjectId(cid), "products.pid": pid }, { $set: { "products.$.quantity": cantidad } })
+                    await cartModel.updateOne({ "_id": new mongoose.Types.ObjectId(cid), "products.pid": new mongoose.Types.ObjectId(pid) }, { $set: { "products.$.quantity": cantidad } })
                 }
                 return "Producto Agregado Correctamente"
             }
-        } catch (e) {
-            console.log("Update Product error de formato de codigo")
-            return "Formato de codigo erroneo"
-        }
+        // } catch (e) {
+        //     console.log("Update Product error de formato de codigo")
+        //     return "Formato de codigo erroneo"
+        // }
     }
     deleteCartProduct = async (cid, pid) => {
         try {
-            let fil = { $pull: { "products": { pid: pid } } }
+            let fil = { $pull: { "products": { pid: new mongoose.Types.ObjectId(pid) } } }
             const arreglo = await cartModel.updateOne({ "_id": new mongoose.Types.ObjectId(cid) }, fil)
 
             if (arreglo.matchedCount == 0) {
@@ -77,7 +82,9 @@ class CartManager {
 
     addListProductCart = async (cid, prodArray) => {
         try {
+            
             let result = prodArray.products.map((e) => e.pid)
+            
             let test = await productModel.find({ "_id": { $in: result } })
             if (result.length != test.length) {
                 return "Uno o mas Productos que intenta agregar no son validos"
@@ -88,7 +95,7 @@ class CartManager {
                 return arreglo
             }
         } catch (e) {
-            console.log("Update Product error de formato de codigo")
+            console.log("Update Product error de formato de codigo!!")
             return "Formato de codigo erroneo"
         }
     }
