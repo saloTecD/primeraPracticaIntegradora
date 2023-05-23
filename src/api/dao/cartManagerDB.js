@@ -13,7 +13,7 @@ class CartManager {
     }
     listCartProducts = async (id) => {
         try {
-            const arreglo = await cartModel.findById(id).populate({path:"products.pid",model:productModel})
+            const arreglo = await cartModel.findById(id).populate({path:"products.pid",model:productModel}).lean()
             if (arreglo === null) {
                 return "El ID del carrito que busca no existe"
             } else {

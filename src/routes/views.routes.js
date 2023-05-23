@@ -1,8 +1,9 @@
 import { Router } from "express";
 import productManager from "../api/dao/productManagerDB.js"
+import cartManager from "../api/dao/cartManagerDB.js"
 const router= Router()
 const pManager=new productManager()
-
+const cManager=new cartManager()
 
 
 router.get(`/realtimeproducts`,async(req,res)=>{
@@ -59,6 +60,15 @@ router.get(`/products`,async(req,res)=>{
 
 
     
+})
+
+router.get(`/carts/:cid`,async(req,res)=>{
+    let cid=req.params.cid
+    let products=[]
+    
+    products=await cManager.listCartProducts(cid)
+    
+    res.render("cart",{showProducts:products})
 })
 
 export default router
