@@ -13,7 +13,7 @@ class CartManager {
     }
     listCartProducts = async (id) => {
         try {
-            const arreglo = await cartModel.findById(id)
+            const arreglo = await cartModel.findById(id).populate({path:"products.pid",model:productModel})
             if (arreglo === null) {
                 return "El ID del carrito que busca no existe"
             } else {
@@ -22,6 +22,7 @@ class CartManager {
         } catch (e) {
 
             console.log("Update Product error de formato de codigo")
+            console.log(e.message)
             return "Formato de codigo erroneo"
         }
     }
