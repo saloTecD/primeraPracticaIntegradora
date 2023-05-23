@@ -22,7 +22,7 @@ class ProductManager {
         let q
         let op
         q=n.category?{category:n.category}:n.status?{status:n.status}:{}
-        op=n.sort===false?{limit:n.limit,page:n.page}:{limit:n.limit,page:n.page,sort:{price:n.sort}}
+        op=n.sort===false?{limit:n.limit,page:n.page,lean:true}:{limit:n.limit,page:n.page,sort:{price:n.sort},lean:true}
         
         const arreglo = await productModel.paginate(q,op)
         return arreglo

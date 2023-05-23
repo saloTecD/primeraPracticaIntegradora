@@ -21,8 +21,8 @@ router.post(`/carts/:cid/product/:pid`, async (req, res) => {
 
         res.status(200).send("El producto que quieres agregar no existe")
     } else {
-
-        res.status(200).send(await cManager.addCartProduct(cid, pid))
+        const process=await cManager.addCartProduct(cid, pid)
+        res.status(200).send({status:"OK",data:process})
     }
 })
 
